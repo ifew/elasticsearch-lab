@@ -58,7 +58,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"mappings\": {\n        \"products\": {\n            \"properties\": {\n                \"price\": {\n                    \"type\": \"float\"\n                },\n                \"date_create\": {\n                    \"type\": \"date\",\n                    \"index\": true,\n                    \"format\": \"yyyy-MM-dd HH:mm:ss||epoch_millis\"\n                },\n                \"brand\": {\n                    \"type\": \"keyword\",\n                    \"index\": true\n                },\n                \"name\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"my_synonyms\"\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\"\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                },\n                \"description\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"my_synonyms\"\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\"\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"settings\": {\n        \"analysis\": {\n            \"filter\": {\n                \"my_synonym_filter\": {\n                    \"type\": \"synonym\",\n                    \"synonyms\": [\n                        \"strawberry, สตรอเบอร์รี่, สตอเบอร์รี่, สตอเบอรี่, สตรอเบอรี่, straw berry, stawberry, staw berry => สตรอเบอร์รี่, strawberry\",\n                        \"m&m, m & m, เอ็มแอนเอ็ม, เอมแอนเอม, เอ็ม แอนด์ เอ็ม, เอ็นแอนด์เอ็ม => M & M\"\n                    ]\n                }\n            },\n            \"analyzer\": {\n                \"my_synonyms\": {\n                    \"tokenizer\": \"thai\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"my_synonym_filter\"\n                    ]\n                }\n            }\n        }\n    }\n}"
+					"raw": "{\n    \"mappings\": {\n        \"products\": {\n            \"properties\": {\n                \"price\": {\n                    \"type\": \"float\"\n                },\n                \"date_create\": {\n                    \"type\": \"date\",\n                    \"index\": true,\n                    \"format\": \"yyyy-MM-dd HH:mm:ss||epoch_millis\"\n                },\n                \"brand\": {\n                    \"type\": \"keyword\",\n                    \"index\": true\n                },\n                \"name\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\",\n                            \"boost\": 4\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\",\n                            \"boost\": 2\n                        },\n                        \"search_english_kw\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"keyword\",\n                            \"boost\": 4\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                },\n                \"description\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\"\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\"\n                        },\n                        \"search_english_kw\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"keyword\"\n                        }\n                    }\n                },\n                \"tag\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\",\n                            \"boost\": 8,\n                            \"index\": true\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\",\n                            \"boost\": 6,\n                            \"index\": true\n                        },\n                        \"search\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"tag_stop\",\n                            \"boost\": 10,\n                            \"index\": true\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"settings\": {\n        \"analysis\": {\n            \"filter\": {\n                \"my_synonym_filter\": {\n                    \"type\": \"synonym\",\n                    \"synonyms\": [\n                        \"strawberry, สตรอเบอร์รี่, สตอเบอร์รี่, สตอเบอรี่, สตรอเบอรี่, straw berry, stawberry, staw berry => สตรอเบอร์รี่, strawberry\",\n                        \"m&m, m & m, เอ็มแอนเอ็ม, เอมแอนเอม, เอ็ม แอนด์ เอ็ม, เอ็นแอนด์เอ็ม => M & M\",\n                        \"strawberry juice, น้ำสตรอเบอร์รี่คั้น => น้ำสตรอเบอร์รี่คั้น, strawberry juice\"\n                    ]\n                }\n            },\n            \"analyzer\": {\n                \"synonyms_thai\": {\n                    \"tokenizer\": \"thai\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"my_synonym_filter\"\n                    ]\n                },\n                \"tag_stop\": {\n                    \"type\": \"stop\",\n                    \"stopwords\": [\",\", \":\", \"|\"]\n                  }\n            }\n        }\n    }\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store",
@@ -67,6 +67,35 @@
 					],
 					"path": [
 						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Mapping",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/_mapping",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"_mapping"
 					]
 				}
 			},
@@ -107,17 +136,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"name\":\"M-M Chocolate\",\"brand\":\"M-M\",\"price\":18.00,\"category\":\"Snack\",\"description\":\"เอ็ม-เอ็ม ช็อกโกแลต\",\"date_create\":\"2019-05-07 14:17:00\"}\n"
+					"raw": "{\"name\":\"ดัชมิลล์นมเปรี้ยวยูเอชทีรสสตรอเบอร์รี่ 180มล. แพค 4\",\"brand\":\"Dutch Mill\",\"price\":37.00,\"category\":\"Milk\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"tag\":\"ดัชมิลล์,นมเปรี้ยว,ดัชมิลล์นมเปรี้ยว,รสสตรอเบอร์รี่,นมเปรี้ยวยูเอชทีรสสตรอเบอร์รี่,นมเปรี้ยวรสสตรอเบอร์รี่,strawberry,สตรอเบอร์รี่,strawberry\",\"date_create\":\"2019-05-07 14:17:00\"}"
 				},
 				"url": {
-					"raw": "{{my_aws_elasticsearch}}/store/products/9",
+					"raw": "{{my_aws_elasticsearch}}/store/products/10",
 					"host": [
 						"{{my_aws_elasticsearch}}"
 					],
 					"path": [
 						"store",
 						"products",
-						"9"
+						"10"
 					]
 				}
 			},
@@ -137,7 +166,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"index\": {\"_id\": 1}}\n{\"name\":\"ดัชมิลล์นมเปรี้ยวยูเอชทีรสสตรอเบอร์รี่ 180มล. แพค 4\",\"brand\":\"Dutch Mill\",\"price\":37.00,\"category\":\"Milk\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 2}}\n{\"name\":\"M150 - Strawberry Flavour\",\"brand\":\"Osotspa\",\"price\":15.00,\"category\":\"Energy Drink\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 3}}\n{\"name\":\"สตรอเบอร์รี่เกาหลี 250กรัม\",\"brand\":\"Import Brand\",\"price\":159.00,\"category\":\"Fruit\",\"description\":\"สินค้านำเข้า สตรอเบอร์รี่เกาหลีแท้ 100%\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 4}}\n{\"name\":\"สตรอเบอร์รี่เกาหลี 330กรัม\",\"brand\":\"Import Brand\",\"price\":299.00,\"category\":\"Fruit\",\"description\":\"Straw Berry from Korea\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 5}}\n{\"name\":\"MCard\",\"brand\":\"Major\",\"price\":500,\"category\":\"Cash Card\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 6}}\n{\"name\":\"Straw Berry\",\"brand\":\"OTOP\",\"price\":250.00,\"category\":\"Fruit\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 7}}\n{\"name\":\"KitKat - Strawberry Flavour\",\"brand\":\"Nestlé\",\"price\":23.00,\"category\":\"Snack\",\"description\":\"คิทแคท รสสตรอเบอร์รี่ อร่อยดี\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 8}}\n{\"name\":\"Loacker Strawberry\",\"brand\":\"Loacker\",\"price\":25.00,\"category\":\"Snack\",\"description\":\"กรอบ อร่อย Loacker Strawberry\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 9}}\n{\"name\":\"M & M Chocolate\",\"brand\":\"M & M\",\"price\":18.00,\"category\":\"Snack\",\"description\":\"เอ็ม แอนด์ เอ็ม ช็อกโกแลต\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 10}}\n{\"name\":\"M-M Chocolate\",\"brand\":\"M-M\",\"price\":18.00,\"category\":\"Snack\",\"description\":\"เอ็ม-เอ็ม ช็อกโกแลต\",\"date_create\":\"2019-05-07 14:17:00\"}\n"
+					"raw": "{\"index\": {\"_id\": 1}}\n{\"name\":\"ดัชมิลล์นมเปรี้ยวยูเอชทีรสสตรอเบอร์รี่ 180มล. แพค 4\",\"brand\":\"Dutch Mill\",\"price\":37.00,\"category\":\"Milk\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 2}}\n{\"name\":\"M150 - Strawberry Flavour\",\"brand\":\"Osotspa\",\"price\":15.00,\"category\":\"Energy Drink\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 3}}\n{\"name\":\"สตรอเบอร์รี่เกาหลี 250กรัม\",\"brand\":\"Import Brand\",\"price\":159.00,\"category\":\"Fruit\",\"description\":\"สินค้านำเข้า สตรอเบอร์รี่เกาหลีแท้ 100%\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 4}}\n{\"name\":\"สตรอเบอร์รี่เกาหลี 330กรัม\",\"brand\":\"Import Brand\",\"price\":299.00,\"category\":\"Fruit\",\"description\":\"Straw Berry from Korea\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 5}}\n{\"name\":\"MCard\",\"brand\":\"Major\",\"price\":500,\"category\":\"Cash Card\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 6}}\n{\"name\":\"Straw Berry\",\"brand\":\"OTOP\",\"price\":250.00,\"category\":\"Fruit\",\"description\":\"Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 7}}\n{\"name\":\"KitKat - Strawberry Flavour\",\"brand\":\"Nestlé\",\"price\":23.00,\"category\":\"Snack\",\"description\":\"คิทแคท รสสตรอเบอร์รี่ อร่อยดี\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 8}}\n{\"name\":\"Loacker Strawberry\",\"brand\":\"Loacker\",\"price\":25.00,\"category\":\"Snack\",\"description\":\"กรอบ อร่อย Loacker Strawberry\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 9}}\n{\"name\":\"M & M Chocolate\",\"brand\":\"M & M\",\"price\":18.00,\"category\":\"Snack\",\"description\":\"เอ็ม แอนด์ เอ็ม ช็อกโกแลต\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 10}}\n{\"name\":\"M-M Chocolate\",\"brand\":\"M-M\",\"price\":18.00,\"category\":\"Snack\",\"description\":\"เอ็ม-เอ็ม ช็อกโกแลต\",\"date_create\":\"2019-05-07 14:17:00\"}\n{\"index\": {\"_id\": 11}}\n{\"name\":\"Malee Strawberry Juice\",\"brand\":\"Malee\",\"price\":20.00,\"category\":\"Fruit Drink\",\"description\":\"น้ำสตรอเบอร์รี่คั้นสด ตรามาลี\",\"date_create\":\"2019-05-08 14:17:00\"}\n{\"index\": {\"_id\": 12}}\n{\"name\":\"Chabaa Strawberry Juice\",\"brand\":\"Chabaa\",\"price\":20.00,\"category\":\"Fruit Drink\",\"description\":\"น้ำสตรอเบอร์รี่คั้นสด ตราชบา\",\"date_create\":\"2019-05-08 14:17:00\"}\n{\"index\": {\"_id\": 13}}\n{\"name\":\"น้ำสตรอเบอร์รี่คั้นสด\",\"brand\":\"OTOP\",\"price\":20.00,\"category\":\"Fruit Drink\",\"description\":\"น้ำสตรอเบอร์รี่คั้นสด โดยชาวบ้านเชียงใหม่\",\"date_create\":\"2019-05-08 14:17:00\"}\n"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store/products/_bulk",
@@ -266,7 +295,106 @@
 				],
 				"body": {
 					"mode": "raw",
+					"raw": "{\n   \"query\": {\n     \"match\": {\n      \"name\": \"strawberry juice\"\n     }\n   }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search fulltext match with special char",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
 					"raw": "{\n   \"query\": {\n     \"match\": {\n      \"name\": \"m&m\"\n     }\n   }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search fulltext match phrase",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"query\": {\n     \"match_phrase\": {\n      \"name\": \"Strawberry Juice\"\n     }\n   }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search fulltext match phrase with special char",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"query\": {\n     \"match_phrase\": {\n      \"name\": \"m&m\"\n     }\n   }\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
@@ -299,7 +427,40 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": {\n    \"multi_match\": {\n      \"type\":     \"most_fields\", \n      \"query\":    \"strawberry\",\n      \"fields\": [ \"name\", \"name.search\", \"name.search_english\" ]\n    }\n  }\n}"
+					"raw": "{\n    \"query\": {\n        \"multi_match\": {\n            \"type\": \"most_fields\",\n            \"query\": \"strawberry juice\",\n            \"fields\": [\n                \"name.search_thai\",\"name.search_english\",\"tag.search\"\n            ]\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search  fulltext match and multi-field (with whitespace)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"query\": {\n        \"multi_match\": {\n            \"query\": \"strawberry juice\",\n            \"type\": \"most_fields\",\n            \"fields\": [\n                \"name.search_thai\",\n                \"name.search_english_kw\",\n                \"tag.search\"\n            ],\n            \"minimum_should_match\": \"100%\"\n        }\n    }\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
@@ -332,7 +493,40 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n   \"query\": {\n     \"match\": {\n      \"name\": \"strawberry\"\n     }\n   },\n\t\"sort\" : {\"name.sort\" :  \"desc\"}\n}"
+					"raw": "{\n    \"query\": {\n        \"multi_match\": {\n            \"query\": \"strawberry juice\",\n            \"type\": \"most_fields\",\n            \"fields\": [\n                \"name.search_thai\",\n                \"name.search_english_kw\",\n                \"tag.search\"\n            ],\n            \"minimum_should_match\": \"100%\"\n        }\n    },\n    \"sort\": {\n        \"name.sort\": \"asc\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search fulltext match with sort by specific category",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"query\": {\n        \"multi_match\": {\n            \"query\": \"strawberry juice\",\n            \"type\": \"most_fields\",\n            \"fields\": [\n                \"name.search_thai\",\n                \"name.search_english_kw\",\n                \"tag.search\"\n            ],\n            \"minimum_should_match\": \"100%\"\n        }\n    },\n    \"sort\": {\n        \"name.sort\": \"asc\"\n    }\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
@@ -382,6 +576,39 @@
 			"response": []
 		},
 		{
+			"name": "Search range",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": {\n    \"range\": {\n      \"price\": {\n        \"gte\": 100,\n        \"lte\": 500\n      }\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/store/products/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"store",
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Analyst",
 			"request": {
 				"method": "POST",
@@ -395,7 +622,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"analyzer\" : \"thai\",\n  \"filter\":  [ \"lowercase\", \"my_synonym_filter\" ],\n  \"text\" : \"อยากกินสตรอเบอร์รี่ที่มาจาก Korea Strawberry\"\n}"
+					"raw": "{\n  \"analyzer\" : \"thai\",\n  \"filter\":  [ \"lowercase\", \"my_synonym_filter\" ],\n  \"text\" : \"strawberry juice\"\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store/_analyze",
@@ -453,7 +680,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"settings\": {\n    \"analysis\": {\n      \"filter\": {\n        \"my_synonym_filter\": {\n          \"type\": \"synonym\", \n          \"synonyms\": [ \n            \"strawberry,สตอเบอร์รี่, สตรอเบอร์รี่, สตอเบอรี่, สตรอเบอรี่, straw berry\",\n            \"m&m,m & m, เอ็มแอนเอ็ม, เอมแอนเอม, เอ็ม แอนด์ เอ็ม, เอ็นแอนด์เอ็ม\"\n          ]\n        }\n      },\n      \"analyzer\": {\n        \"my_synonyms\": {\n          \"tokenizer\": \"thai\",\n          \"filter\": [\n            \"lowercase\",\n            \"my_synonym_filter\" \n          ]\n        }\n      }\n    }\n  }\n}"
+					"raw": "{\n    \"settings\": {\n        \"analysis\": {\n            \"filter\": {\n                \"my_synonym_filter\": {\n                    \"type\": \"synonym\",\n                    \"synonyms\": [\n                        \"strawberry, สตรอเบอร์รี่, สตอเบอร์รี่, สตอเบอรี่, สตรอเบอรี่, straw berry, stawberry, staw berry => สตรอเบอร์รี่, strawberry\",\n                        \"m&m, m & m, เอ็มแอนเอ็ม, เอมแอนเอม, เอ็ม แอนด์ เอ็ม, เอ็นแอนด์เอ็ม => M & M\"\n                    ]\n                }\n            },\n            \"analyzer\": {\n                \"my_synonyms\": {\n                    \"tokenizer\": \"thai\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"my_synonym_filter\"\n                    ]\n                }\n            }\n        }\n    }\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/store/",
