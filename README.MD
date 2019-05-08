@@ -11,7 +11,10 @@
 - Get Document
 - Search match all
 - Search Fulltext
+- Search fulltext match with special char
+- Search fulltext match and multi-field (with whitespace)
 - Search Term
+- Search Term with special char
 - Search product name in Thai or English found both language (Using multi-fields)
 - Search with sorting
 - Search with range data
