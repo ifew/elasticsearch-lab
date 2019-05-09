@@ -58,16 +58,15 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"mappings\": {\n        \"default\": {\n            \"properties\": {\n                \"price\": {\n                    \"type\": \"float\"\n                },\n                \"date_create\": {\n                    \"type\": \"date\",\n                    \"index\": true,\n                    \"format\": \"yyyy-MM-dd HH:mm:ss||epoch_millis\"\n                },\n                \"brand\": {\n                    \"type\": \"keyword\",\n                    \"index\": true\n                },\n                \"name\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\",\n                            \"boost\": 4\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\",\n                            \"boost\": 2\n                        },\n                        \"search_english_kw\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"keyword\",\n                            \"boost\": 4\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                },\n                \"description\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\"\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\"\n                        },\n                        \"search_english_kw\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"keyword\"\n                        }\n                    }\n                },\n                \"tag\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\",\n                            \"boost\": 8,\n                            \"index\": true\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\",\n                            \"boost\": 6,\n                            \"index\": true\n                        },\n                        \"search\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"tag_stop\",\n                            \"boost\": 10,\n                            \"index\": true\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"settings\": {\n        \"analysis\": {\n            \"filter\": {\n                \"my_synonym_filter\": {\n                    \"type\": \"synonym\",\n                    \"synonyms\": [\n                        \"strawberry, สตรอเบอร์รี่, สตอเบอร์รี่, สตอเบอรี่, สตรอเบอรี่, straw berry, stawberry, staw berry => สตรอเบอร์รี่, strawberry\",\n                        \"m&m, m & m, เอ็มแอนเอ็ม, เอมแอนเอม, เอ็ม แอนด์ เอ็ม, เอ็นแอนด์เอ็ม => M & M\",\n                        \"strawberry juice, น้ำสตรอเบอร์รี่คั้น => น้ำสตรอเบอร์รี่คั้น, strawberry juice\"\n                    ]\n                }\n            },\n            \"analyzer\": {\n                \"synonyms_thai\": {\n                    \"tokenizer\": \"thai\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"my_synonym_filter\"\n                    ]\n                },\n                \"tag_stop\": {\n                    \"type\": \"stop\",\n                    \"stopwords\": [\",\", \":\", \"|\"]\n                  }\n            }\n        }\n    }\n}"
+					"raw": "{\n    \"mappings\": {\n        \"default\": {\n            \"properties\": {\n                \"price\": {\n                    \"type\": \"float\"\n                },\n                \"date_create\": {\n                    \"type\": \"date\",\n                    \"index\": true,\n                    \"format\": \"yyyy-MM-dd HH:mm:ss||epoch_millis\"\n                },\n                \"category\": {\n                    \"type\": \"text\",\n                    \"index\": true,\n                    \"fielddata\": true,\n                    \"analyzer\": \"keyword\"\n                },\n                \"brand\": {\n                    \"type\": \"keyword\",\n                    \"index\": true\n                },\n                \"name\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\",\n                            \"boost\": 4\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\",\n                            \"boost\": 2\n                        },\n                        \"search_english_kw\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"keyword\",\n                            \"boost\": 4\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                },\n                \"description\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\"\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\"\n                        },\n                        \"search_english_kw\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"keyword\"\n                        }\n                    }\n                },\n                \"tag\": {\n                    \"type\": \"text\",\n                    \"fields\": {\n                        \"search_thai\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"synonyms_thai\",\n                            \"boost\": 8,\n                            \"index\": true\n                        },\n                        \"search_english\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"standard\",\n                            \"boost\": 6,\n                            \"index\": true\n                        },\n                        \"search\": {\n                            \"type\": \"text\",\n                            \"analyzer\": \"tag_stop\",\n                            \"boost\": 10,\n                            \"index\": true,\n                            \"fielddata\": true\n                        },\n                        \"sort\": {\n                            \"type\": \"keyword\",\n                            \"index\": true\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"settings\": {\n        \"analysis\": {\n            \"filter\": {\n                \"my_synonym_filter\": {\n                    \"type\": \"synonym\",\n                    \"synonyms\": [\n                        \"strawberry, สตรอเบอร์รี่, สตอเบอร์รี่, สตอเบอรี่, สตรอเบอรี่, straw berry, stawberry, staw berry => สตรอเบอร์รี่, strawberry\",\n                        \"m&m, m & m, เอ็มแอนเอ็ม, เอมแอนเอม, เอ็ม แอนด์ เอ็ม, เอ็นแอนด์เอ็ม => M & M\",\n                        \"strawberry juice, น้ำสตรอเบอร์รี่คั้น => น้ำสตรอเบอร์รี่คั้น, strawberry juice\"\n                    ]\n                }\n            },\n            \"analyzer\": {\n                \"synonyms_thai\": {\n                    \"tokenizer\": \"thai\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"my_synonym_filter\"\n                    ]\n                },\n                \"tag_stop\": {\n                    \"type\": \"stop\",\n                    \"stopwords\": [\n                        \",\",\n                        \":\",\n                        \"|\"\n                    ]\n                }\n            }\n        }\n    }\n}"
 				},
 				"url": {
-					"raw": "{{my_aws_elasticsearch}}/products/default",
+					"raw": "{{my_aws_elasticsearch}}/products",
 					"host": [
 						"{{my_aws_elasticsearch}}"
 					],
 					"path": [
-						"products",
-						"default"
+						"products"
 					]
 				}
 			},
@@ -124,6 +123,36 @@
 					],
 					"path": [
 						"products",
+						"_mapping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Mapping",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"properties\": {\n        \"category\": {\n            \"type\": \"text\",\n            \"index\": true,\n            \"fielddata\": true,\n            \"analyzer\": \"keyword\"\n        },\n        \"tag\": {\n            \"type\": \"text\",\n            \"fields\": {\n                \"search\": {\n                    \"type\": \"text\",\n                    \"boost\": 10,\n                    \"analyzer\": \"tag_stop\",\n                    \"fielddata\": true\n                },\n                \"search_english\": {\n                    \"type\": \"text\",\n                    \"boost\": 6,\n                    \"analyzer\": \"standard\"\n                },\n                \"search_thai\": {\n                    \"type\": \"text\",\n                    \"boost\": 8,\n                    \"analyzer\": \"synonyms_thai\"\n                },\n                \"sort\": {\n                    \"type\": \"keyword\"\n                }\n            }\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/products/default/_mapping",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"products",
+						"default",
 						"_mapping"
 					]
 				}
@@ -203,7 +232,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Document Bulk  store",
+			"name": "Add Document Bulk  products",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -582,7 +611,7 @@
 			"response": []
 		},
 		{
-			"name": "Search fulltext match with sort by specific category",
+			"name": "Search fulltext match with sort by specific category priority",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -598,7 +627,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n   \"query\": {\n      \"function_score\": {\n         \"query\": {\n           \"match\": {}\n         },\n         \"boost_mode\": \"replace\",\n         \"script_score\": {\n            \"script\": {\n               \"params\": {\n                  \"important_tags\": [\"tag1\", \"tag2, \"tag3\"]\n               },\n               \"source\": \"params.important_tags.indexOf(doc['tag'].value) > -1 ? 10 : 0\"\n            }\n         }\n      }\n   },\n   \"sort\" : [\n       \"_score\",\n        { \"defaultOrderField\" : \"desc\" }\n    ]\n}"
+					"raw": "{\n  \"track_scores\": true,\n  \"sort\": [\n    {\n      \"_script\": {\n        \"type\": \"number\",\n        \"script\": {\n          \"lang\": \"painless\",\n          \"source\": \"int sortOrder = 10; if (doc['category'].value == 'Fruit') {sortOrder =  1} else if (doc['category'].value == 'Fruit Drink') {sortOrder = 2} else if (doc['category'].value == 'Snack') {sortOrder = 3} else if (doc['category'].value == 'Energy Drink') {sortOrder = 4} sortOrder; \"\n        },\n        \"order\": \"asc\"\n      }\n    }\n  ],\n   \"query\": {\n      \"function_score\": {\n         \"query\": {\n           \"multi_match\": {\n              \"query\": \"strawberry\",\n              \"type\": \"most_fields\", \n              \"fields\": [ \n                \"name.search_thai\", \n                \"name.search_english_kw\", \n                \"tag.search\" ]\n              ,\"minimum_should_match\": \"0%\" \n          }\n         }\n      }\n   }, \"_source\": [\"name\",\"category\",\"tag\"], \"size\": 200\n}"
 				},
 				"url": {
 					"raw": "{{my_aws_elasticsearch}}/products/_search",
@@ -607,6 +636,39 @@
 					],
 					"path": [
 						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List search index priorities",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"query\": {\n\t\"match_all\" : {}\n   }\n}"
+				},
+				"url": {
+					"raw": "{{my_aws_elasticsearch}}/search_index/default/_search",
+					"host": [
+						"{{my_aws_elasticsearch}}"
+					],
+					"path": [
+						"search_index",
+						"default",
 						"_search"
 					]
 				}
